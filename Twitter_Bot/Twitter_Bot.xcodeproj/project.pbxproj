@@ -6,10 +6,21 @@
 	objectVersion = 46;
 	objects = {
 
+/* Begin PBXFileReference section */
+		AB581FD01C7E88E700CBA909 /* bot.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; path = bot.py; sourceTree = "<group>"; };
+		AB581FD11C7E88E700CBA909 /* LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
+		AB581FD21C7E88E700CBA909 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		AB581FD31C7E88E700CBA909 /* secrets.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; path = secrets.py; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
 /* Begin PBXGroup section */
 		AB581FC91C7E882000CBA909 = {
 			isa = PBXGroup;
 			children = (
+				AB581FD01C7E88E700CBA909 /* bot.py */,
+				AB581FD11C7E88E700CBA909 /* LICENSE */,
+				AB581FD21C7E88E700CBA909 /* README.md */,
+				AB581FD31C7E88E700CBA909 /* secrets.py */,
 			);
 			sourceTree = "<group>";
 		};
