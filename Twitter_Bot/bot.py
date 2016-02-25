@@ -1,5 +1,7 @@
+#!/usr/bin/python
+# -*- coding: latin-1 -*-
+
 # Copyright (c) 2015–2016 Molly White
-#
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
 # in the Software without restriction, including without limitation the rights
@@ -17,9 +19,9 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
-
 import os
 import tweepy
+import praw
 from secrets import *
 from time import gmtime, strftime
 from secrets import *
@@ -34,11 +36,19 @@ logfile_name = bot_username + ".log"
 
 # ==============================================================
 
+#-----------------------------
+user_agent = ("HipHop Bot Ver 1.0")
+
+r = praw.Reddit("HipHopHeads")
+r = praw.Reddit(user_agent = user_agent)
+
+subreddit = r.get_subreddit("HipHopHeads")
+
 
 def create_tweet():
     """Create the text of the tweet you want to send."""
     # Replace this with your code!
-    text = ""
+    text = "test"
     return text
 
 
@@ -48,7 +58,7 @@ def tweet(text):
     auth = tweepy.OAuthHandler(C_KEY, C_SECRET)
     auth.set_access_token(A_TOKEN, A_TOKEN_SECRET)
     api = tweepy.API(auth)
-
+    
     # Send the tweet and log success or failure
     try:
         api.update_status(text)
