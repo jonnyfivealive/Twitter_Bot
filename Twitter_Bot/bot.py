@@ -22,6 +22,7 @@
 import os
 import tweepy
 import praw
+import re
 from secrets import *
 from time import gmtime, strftime
 from secrets import *
@@ -31,12 +32,24 @@ auth.set_access_token(A_TOKEN, A_TOKEN_SECRET)
 api = tweepy.API(auth)
 
 # ====== Individual bot configuration ==========================
-bot_username = ''
+bot_username = 'test'
 logfile_name = bot_username + ".log"
 
 # ==============================================================
 
-#-----------------------------
+# Have we run this code before? If not, create an empty list
+if not os.path.isfile("posts_replied_to.txt"):
+    posts_replied_to = []
+# If we have run the code before, load the list of posts we have replied to
+else:
+    # Read the file into a list and remove any empty values
+    with open("posts_replied_to.txt", "r") as f:
+        posts_replied_to = f.read()
+        posts_replied_to = posts_replied_to.split("\n")
+        posts_replied_to = filter(None, posts_replied_to)
+
+
+#--------------Read the Subreeddit post--------------------------
 user_agent = ("HipHop Bot Ver 1.0")
 
 r = praw.Reddit("HipHopHeads")
@@ -44,11 +57,42 @@ r = praw.Reddit(user_agent = user_agent)
 
 subreddit = r.get_subreddit("HipHopHeads")
 
+for submission in subreddit.get_new(limit = 21):
+    # print "Title: ", submission.title
+    #print "Text: ", submission.selftext
+    #print "Score: ", submission.score
+    #print "---------------------------------\n"
 
+    # If we haven't replied to this post before
+    if submission.id not in posts_replied_to:
+    
+        # Do a case insensitive search
+        if re.search("fresh", submission.title, re.IGNORECASE):
+            print "---------------------------------\n"
+            print "---------------------------------\n"
+            print "Title: ", submission.title
+            #print "Text: ", submission.selftext
+            print "---------------------------------\n"
+            
+            # Store the current id into our list
+            posts_replied_to.append(submission.id)
+
+# Write our updated list back to the file
+with open("posts_replied_to.txt", "w") as f:
+    for post_id in posts_replied_to:
+        f.write(post_id + "\n")
+
+
+
+#-----------------------------------------------------------------
+
+
+
+#-------------------Sending the text to twitter--------------------
 def create_tweet():
     """Create the text of the tweet you want to send."""
     # Replace this with your code!
-    text = "test"
+    text = ""
     return text
 
 
@@ -61,11 +105,11 @@ def tweet(text):
     
     # Send the tweet and log success or failure
     try:
-        api.update_status(text)
+         api.update_status(text)
     except tweepy.error.TweepError as e:
         log(e.message)
     else:
-        log("Tweeted: " + text)
+       log("Tweeted: " + text)
 
 
 def log(message):
