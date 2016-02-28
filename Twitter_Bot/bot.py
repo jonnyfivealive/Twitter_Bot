@@ -54,14 +54,12 @@ user_agent = ("HipHop Bot Ver 1.0")
 
 r = praw.Reddit("HipHopHeads")
 r = praw.Reddit(user_agent = user_agent)
+text_title = ""
+text_link = ""
 
 subreddit = r.get_subreddit("HipHopHeads")
 
-for submission in subreddit.get_new(limit = 21):
-    # print "Title: ", submission.title
-    #print "Text: ", submission.selftext
-    #print "Score: ", submission.score
-    #print "---------------------------------\n"
+for submission in subreddit.get_new(limit = 40):
 
     # If we haven't replied to this post before
     if submission.id not in posts_replied_to:
@@ -71,9 +69,24 @@ for submission in subreddit.get_new(limit = 21):
             print "---------------------------------\n"
             print "---------------------------------\n"
             print "Title: ", submission.title
-            #print "Text: ", submission.selftext
+            text_link =  str(submission.short_link)  #.encode("utf-8")
+            print "URL: ", submission.short_link
+            text_title = str(submission.title)
+            print "URL: ", submission.id
             print "---------------------------------\n"
-            
+            text_tweet =  text_title + " " + text_link
+            print text_tweet
+
+            """Send out the text as a tweet."""
+            # Twitter authentication
+            auth = tweepy.OAuthHandler(C_KEY, C_SECRET)
+            auth.set_access_token(A_TOKEN, A_TOKEN_SECRET)
+            api = tweepy.API(auth)
+            try:
+                api.update_status(text_tweet)
+            except tweepy.error.TweepError as my:
+                log(my.message) # outputs 'my detailed description'
+
             # Store the current id into our list
             posts_replied_to.append(submission.id)
 
@@ -89,30 +102,20 @@ with open("posts_replied_to.txt", "w") as f:
 
 
 #-------------------Sending the text to twitter--------------------
-def create_tweet():
-    """Create the text of the tweet you want to send."""
-    # Replace this with your code!
-    text = ""
-    return text
+#def create_tweet():
+#    """Create the text of the tweet you want to send."""
+#    # Replace this with your code!
+#    text = "test"#text_tweet
+#    return text
 
 
-def tweet(text):
-    """Send out the text as a tweet."""
-    # Twitter authentication
-    auth = tweepy.OAuthHandler(C_KEY, C_SECRET)
-    auth.set_access_token(A_TOKEN, A_TOKEN_SECRET)
-    api = tweepy.API(auth)
-    
-    # Send the tweet and log success or failure
-    try:
-         api.update_status(text)
-    except tweepy.error.TweepError as e:
-        log(e.message)
-    else:
-       log("Tweeted: " + text)
+#def tweet(text):
+
+#else:
+## log("Tweeted: " + text)
 
 
-def log(message):
+def log(my):
     """Log message to logfile."""
     path = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
     with open(os.path.join(path, logfile_name), 'a+') as f:
@@ -121,5 +124,16 @@ def log(message):
 
 
 if __name__ == "__main__":
-    tweet_text = create_tweet()
-    tweet(tweet_text)
+    #tweet_text = create_tweet()
+# tweet(tweet_text)
+
+
+
+
+#    # Send the tweet and log success or failure
+#    try:
+#         api.update_status(text)
+#    except tweepy.error.TweepError as e:
+#        log(e.message)
+#    else:
+#       log("Tweeted: " + text)
